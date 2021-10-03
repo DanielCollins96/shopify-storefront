@@ -1,9 +1,10 @@
 import Head from 'next/head'
+import Link from 'next/link'
 import { useState, useEffect } from 'react'
 import { client } from '../lib/shopify';
 
 
-export const getStaticProps = async() => {
+export const getStaticProps = async (context) => {
 
   const products = await client.product.fetchAll()
   const onSaleProducts = products.filter((product) => product.availableForSale == true) 
@@ -11,13 +12,13 @@ export const getStaticProps = async() => {
 
   return {
     props: {
-      products: parsedProducts
+      productList: parsedProducts
     }
   }
 }
 
 
-export default function Home({products}) {
+export default function Home({productList}) {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen py-2">
@@ -29,15 +30,18 @@ export default function Home({products}) {
 
       <p className="text-3xl font-bold">Chopitup</p>
       {
-        products && products.map((product) => {
+        productList && productList.map((product, idx) => {
           return (
-            <div className="m-1 p-3 bg-gray-400">
-              <div className="">
+            <div className="m-1 p-3 bg-gray-400" key={idx}>
+              <div className="mb-2">
                 <img src={product.images[0].src} alt={product.images[0].altText} />
               </div>
               <div className="">
               <p className="font-bold">{product.title}</p>
-              <p>{product.description}</p>
+              <p className="mb-2">{product.description}</p>
+              <Link href={`/product/${product.id}`}>
+                <button className="py-1 px-3 bg-indigo-500 rounded">See More...</button>
+              </Link>
               </div>
             </div>
             )
