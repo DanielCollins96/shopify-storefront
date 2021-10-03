@@ -2,12 +2,10 @@ import { parse } from 'postcss';
 import { client } from '../../lib/shopify';
 
 export const getStaticProps = async ({params}) => {
-    // console.log(params?.productId);
-    console.log('wtf');
+
     const product = await client.product.fetch(params?.productId)
-    console.log(product);
     const parsedProduct = JSON.parse(JSON.stringify(product));
-    // console.log(parsedProduct);
+    
     return {
         props: {
             parsedProduct
